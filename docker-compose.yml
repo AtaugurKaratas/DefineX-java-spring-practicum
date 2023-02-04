@@ -1,0 +1,22 @@
+services:
+  db:
+    container_name: defineX-credit-application
+    image: postgres
+    environment:
+      POSTGRES_USER: ataugurkaratas
+      POSTGRES_PASSWORD: my-secret-password-2022
+      PGDATA: /data/postgres/defineX-credit-application
+    volumes:
+      - db:/data/postgres/defineX-credit-application
+    ports:
+      - "5432:5432"
+    networks:
+      - db
+    restart: unless-stopped
+
+networks:
+  db:
+    driver: bridge
+
+volumes:
+  db:
