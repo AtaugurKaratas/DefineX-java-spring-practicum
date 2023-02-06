@@ -8,8 +8,6 @@ import com.example.credit.service.AuthService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -37,6 +35,12 @@ public class AuthServiceImpl implements AuthService {
     public String getUserId(String identityNumber) {
         Auth auth = authRepository.findByIdentityNumber(identityNumber).orElseThrow();
         return auth.getId();
+    }
+
+    @Override
+    public Auth getAuth(String authId) {
+        Auth auth = authRepository.findById(authId).orElseThrow();
+        return auth;
     }
 
 }
