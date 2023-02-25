@@ -1,7 +1,5 @@
-package com.example.credit.filter;
+package com.example.credit.security;
 
-import com.example.credit.security.AuthUserDetailsService;
-import com.example.credit.security.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

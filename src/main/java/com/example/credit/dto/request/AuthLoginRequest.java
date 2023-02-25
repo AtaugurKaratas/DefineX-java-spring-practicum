@@ -1,13 +1,9 @@
 package com.example.credit.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotNull;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class AuthLoginRequest {
-    private String identityNumber;
-    private String password;
+
+public record AuthLoginRequest(
+        @NotNull String identityNumber,
+        @NotNull String password) {
 }

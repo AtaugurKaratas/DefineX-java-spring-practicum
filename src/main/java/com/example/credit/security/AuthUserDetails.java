@@ -1,5 +1,6 @@
 package com.example.credit.security;
 
+import com.example.credit.dto.AuthDto;
 import com.example.credit.model.Auth;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -7,38 +8,37 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class AuthUserDetails implements UserDetails {
 
-    private String identityNumber;
-
-    private String password;
-
-    private List<GrantedAuthority> authorities;
+    AuthDto authDto;
 
     public AuthUserDetails(Auth auth) {
-        identityNumber = auth.getIdentityNumber();
-        password = auth.getPassword();
-        authorities = (Arrays.stream(auth.getRoles().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList()));
+        authDto = new AuthDto(
+                auth.getIdentityNumber(),
+                auth.getPassword(),
+                Arrays.stream(auth.getRoles().split(","))
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList()),
+                auth.isAccountNonLocked(),
+                auth.isEnabled()
+        );
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return authDto.authorities();
     }
 
     @Override
     public String getPassword() {
-        return password;
+        return authDto.password();
     }
 
     @Override
     public String getUsername() {
-        return identityNumber;
+        return authDto.identityNumber();
     }
 
     @Override
@@ -48,7 +48,7 @@ public class AuthUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return authDto.accountNonLocked();
     }
 
     @Override
@@ -58,7 +58,7 @@ public class AuthUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return authDto.enabled();
     }
 
 }

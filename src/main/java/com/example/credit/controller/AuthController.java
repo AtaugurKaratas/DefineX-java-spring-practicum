@@ -1,53 +1,62 @@
 package com.example.credit.controller;
 
-import com.example.credit.dto.request.AuthLoginRequest;
-import com.example.credit.dto.request.AuthRegisterRequest;
+import com.example.credit.dto.request.*;
 import com.example.credit.dto.response.AuthTokenResponse;
-import com.example.credit.security.JwtService;
 import com.example.credit.service.impl.AuthServiceImpl;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
-    private final AuthServiceImpl userService;
-
-    private final JwtService jwtService;
-
-    private final AuthenticationManager authenticationManager;
-
-    public AuthController(AuthServiceImpl userService, JwtService jwtService, AuthenticationManager authenticationManager) {
-        this.userService = userService;
-        this.jwtService = jwtService;
-        this.authenticationManager = authenticationManager;
-    }
+    private final AuthServiceImpl authService;
 
     @PostMapping("/customer/register")
-    public AuthTokenResponse addNewCustomer(@RequestBody AuthRegisterRequest authRegisterRequest) {
-        String id = userService.addUserCustomer(authRegisterRequest);
-        AuthTokenResponse authResponse = new AuthTokenResponse(id, jwtService.generateToken(authRegisterRequest.getIdentityNumber()));
-        return authResponse;
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<String> addNewCustomer(@Valid @RequestBody AuthRegisterRequest authRegisterRequest) {
+        authService.addUserCustomer(authRegisterRequest);
+        return new ResponseEntity<>("User Created", HttpStatus.CREATED);
     }
 
-    @PostMapping("/customer/login")
-    public AuthTokenResponse authenticateAndGetToken(@RequestBody AuthLoginRequest authRequest) {
-        AuthTokenResponse authResponse;
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken
-                (authRequest.getIdentityNumber(), authRequest.getPassword()));
-        if (authentication.isAuthenticated()) {
-            String id = userService.getUserId(authRequest.getIdentityNumber());
-            authResponse = new AuthTokenResponse(id, jwtService.generateToken(authRequest.getIdentityNumber()));
-            return authResponse;
-        } else
-            throw new UsernameNotFoundException("Invalid user request");
+    @PostMapping("/login")
+    public AuthTokenResponse authenticateAndGetToken(@Valid @RequestBody AuthLoginRequest authRequest) {
+        return authService.authenticateAndGetToken(authRequest);
     }
 
+    @PutMapping("/passwordChange")
+    @PreAuthorize("hasAuthority('ROLE_CUSTOMER') or hasAuthority('ROLE_EMPLOYEE') or hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordRequest changePassword){
+        if(authService.changePassword(changePassword))
+            return new ResponseEntity<>("The Password Has Been Changed", HttpStatus.OK);
+        else
+            return new ResponseEntity<>("The Login Process Failed", HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/{authId}/{verifyCode}")
+    public void accountActivation(@PathVariable String authId, @PathVariable String verifyCode){
+        authService.accountActivation(authId, verifyCode);
+    }
+
+    @PostMapping("/forgottenPassword")
+    public void forgottenPassword(@Valid @RequestBody ForgottenPasswordRequest forgottenPasswordRequest){
+        authService.forgottenPassword(forgottenPasswordRequest);
+    }
+
+    @GetMapping("/forgottenPassword/{authId}/{verifyCode}")
+    public void changeForgottenPassword(@PathVariable String authId, @PathVariable String verifyCode,
+                                        @Valid @RequestBody ChangeForgottenPasswordRequest changeForgottenPasswordRequest){
+        authService.changeForgottenPassword(authId, verifyCode, changeForgottenPasswordRequest);
+    }
+
+    @DeleteMapping("/delete/{authId}")
+    @PreAuthorize("hasAuthority('ROLE_CUSTOMER')")
+    public void deleteUser(@PathVariable String authId){
+        authService.deleteUser(authId);
+    }
 }

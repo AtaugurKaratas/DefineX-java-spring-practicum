@@ -1,14 +1,31 @@
 package com.example.credit.service;
 
-import com.example.credit.dto.request.AuthRegisterRequest;
+import com.example.credit.dto.request.*;
+import com.example.credit.dto.response.AuthTokenResponse;
 import com.example.credit.model.Auth;
 
 public interface AuthService {
+    AuthTokenResponse authenticateAndGetToken(AuthLoginRequest authRequest);
 
-    public String addUserCustomer(AuthRegisterRequest authRegisterRequest);
+    String addUserCustomer(AuthRegisterRequest authRegisterRequest);
 
-    public String getUserId(String identityNumber);
+    String getUserId(String identityNumber);
 
-    public Auth getAuth(String authId);
+    Auth getAuth(String authId);
 
+    Auth addUserEmployee(AuthEmployeeRegister authEmployeeRegister);
+
+    Auth addUserAdmin(AuthAdminRegister authAdminRegister);
+
+    boolean changePassword(ChangePasswordRequest changePassword);
+
+    void accountActivation(String authId, String verifyCode);
+
+    void forgottenPassword(ForgottenPasswordRequest forgottenPasswordRequest);
+
+    void changeForgottenPassword(String authId, String verifyCode, ChangeForgottenPasswordRequest changeForgottenPasswordRequest);
+
+    Auth findByIdentityNumber(String identityNumber);
+
+    void deleteUser(String authId);
 }
