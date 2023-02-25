@@ -1,8 +1,8 @@
 package com.example.credit.config;
 
-import com.example.credit.filter.JwtAuthFilter;
 import com.example.credit.repository.AuthRepository;
 import com.example.credit.security.AuthUserDetailsService;
+import com.example.credit.security.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

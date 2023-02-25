@@ -1,4 +1,4 @@
-package com.example.credit.validation;
+package com.example.credit.annotation.validation;
 
 import com.example.credit.annotation.UniqueIdentityNumber;
 import com.example.credit.model.Auth;

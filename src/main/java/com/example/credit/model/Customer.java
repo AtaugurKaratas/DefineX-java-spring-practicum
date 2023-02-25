@@ -1,20 +1,23 @@
 package com.example.credit.model;
 
-import com.example.credit.model.abstraction.BaseEntitySecure;
+import com.example.credit.model.abstraction.Auditable;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.LocalDate;
 
 
 @Entity
@@ -22,26 +25,28 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Customer extends BaseEntitySecure implements Serializable {
-
+public class Customer extends Auditable implements Serializable {
+    @NotNull
     private String name;
 
+    @NotNull
     private String surname;
 
+    @NotNull
     private String phoneNumber;
 
-    @CreationTimestamp
-    private Instant createDate;
-
-    @UpdateTimestamp
-    private Instant updateDate;
-
+    @NotNull
     private BigDecimal monthlySalary;
 
     private String imagePath;
+    @JsonFormat(pattern = "mm/dd/yyyy")
+    @Past
+    private LocalDate birthDate;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @NotNull
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "auth_id", referencedColumnName = "id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Auth auth;
 
 }

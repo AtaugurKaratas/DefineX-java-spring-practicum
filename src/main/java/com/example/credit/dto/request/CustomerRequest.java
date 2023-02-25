@@ -1,25 +1,26 @@
 package com.example.credit.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.Positive;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class CustomerRequest {
 
-    private String name;
-
-    private String surname;
-
-    private String phoneNumber;
-
-    private BigDecimal monthlySalary;
-
-    private String imagePath;
-
-    private String authId;
+public record CustomerRequest(
+        @NotEmpty
+        String customerName,
+        @NotEmpty
+        String customerSurname,
+        @NotEmpty
+        String phoneNumber,
+        @Positive
+        @NotNull
+        BigDecimal monthlySalary,
+        String imagePath,
+        @Past
+        LocalDate birthDate,
+        String authId) {
 }

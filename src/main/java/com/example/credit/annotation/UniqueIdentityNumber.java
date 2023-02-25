@@ -1,6 +1,6 @@
 package com.example.credit.annotation;
 
-import com.example.credit.validation.UniqueIdentityNumberValidator;
+import com.example.credit.annotation.validation.UniqueIdentityNumberValidator;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
