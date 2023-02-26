@@ -58,7 +58,7 @@ public class CustomerAssetServiceImpl implements CustomerAssetService {
     @Override
     public CustomerAsset getCustomerAsset(String customerAssetId) {
         return customerAssetRepository.findById(customerAssetId).orElseThrow(() -> {
-            log.warn("getCustomerAsset - Customer Asset Not Found");
+            log.warn("Customer Asset Id: {} - Customer Asset Not Found", customerAssetId);
             return new NotFoundException("Customer Asset Not Found");
         });
     }

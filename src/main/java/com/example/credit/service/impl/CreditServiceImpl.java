@@ -60,7 +60,8 @@ public class CreditServiceImpl implements CreditService {
         boolean checkBirthDate = customer.getBirthDate().equals(creditRequest.birthDate());
 
         if (checkIdentityNumber && checkBirthDate) {
-
+            log.info("Identity Number: {}, Birth Date: {} - Credit Request"
+                    , creditRequest.identityNumber(), creditRequest.birthDate());
             if (creditRequest.guarantee()) {
 
                 credit.setGuaranteeCheck(true);
@@ -75,7 +76,8 @@ public class CreditServiceImpl implements CreditService {
 
             }
         } else {
-            log.warn("saveCredit - Identity Number And Date Of Birth Do Not Match");
+            log.warn("Identity Number: {}, Birth Date: {} - Identity Number And Date Of Birth Do Not Match"
+                    , creditRequest.identityNumber(), creditRequest.birthDate());
             throw new MismatchException("Identity Number And Date Of Birth Do Not Match");
         }
 
@@ -120,7 +122,7 @@ public class CreditServiceImpl implements CreditService {
     @Override
     public CreditCalculationResponse calculateCreditScore(CreditCalculationRequest creditCalculationRequest) {
         Credit credit = creditRepository.findById(creditCalculationRequest.creditId()).orElseThrow(() -> {
-            log.warn("calculateCreditScore - Credit Application Not Found");
+            log.warn("Credit Id: {} - Credit Application Not Found", creditCalculationRequest.creditId());
             return new NotFoundException("Credit Application Not Found");
         });
         CreditRating creditRating = creditRatingService.getCreditRating();
@@ -195,7 +197,7 @@ public class CreditServiceImpl implements CreditService {
     @Override
     public CreditListResponse getCredit(String creditId) {
         Credit credit = creditRepository.findById(creditId).orElseThrow(() -> {
-            log.warn("getCredit - Credit Not Found");
+            log.warn("Credit Id: {} - Credit Not Found", creditId);
             return new NotFoundException("Credit Not Found");
         });
         GuaranteeType guaranteeType = null;
@@ -311,7 +313,8 @@ public class CreditServiceImpl implements CreditService {
     public CreditResultResponse getCreditResult(CreditResultRequest creditResultRequest) {
         Customer customer = customerService.getCustomerByIdentityNumber(creditResultRequest.identityNumber());
         if (!customer.getBirthDate().equals(creditResultRequest.birthDate())) {
-            log.warn("getCreditResult - Identity Number And Date Of Birth Do Not Match");
+            log.warn("Identity Number: {}, Birth Date: {} - Identity Number And Date Of Birth Do Not Match"
+                    , creditResultRequest.identityNumber(), creditResultRequest.birthDate());
             throw new MismatchException("Identity Number And Date Of Birth Do Not Match");
         }
         Credit credit = creditRepository.findLastCreditRecordByCustomer(customer.getId());

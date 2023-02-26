@@ -38,10 +38,11 @@ public class CustomerCreditRatingServiceImpl implements CustomerCreditRatingServ
 
     @Override
     public void updateCustomerCreditRating(CustomerCreditRatingRequest customerCreditRatingRequest) {
-        CustomerCreditRating customerCreditRating = customerCreditRatingRepository.findById(customerCreditRatingRequest.id()).orElseThrow(() -> {
-            log.warn("updateCustomerCreditRating - Customer Credit Rating Not Found");
-            return new NotFoundException("Customer Credit Rating Not Found");
-        });
+        CustomerCreditRating customerCreditRating = customerCreditRatingRepository
+                .findById(customerCreditRatingRequest.id()).orElseThrow(() -> {
+                    log.warn("Customer Credit Rating Id: {} - Customer Credit Rating Not Found", customerCreditRatingRequest.id());
+                    return new NotFoundException("Customer Credit Rating Not Found");
+                });
         customerCreditRating.setCreditUsageIntensityScore(customerCreditRatingRequest.creditUsageIntensityScore());
         customerCreditRating.setNewCreditProductLaunchesScore(customerCreditRatingRequest.newCreditProductLaunchesScore());
         customerCreditRating.setCurrentAccountAndDebitStatusScore(customerCreditRatingRequest.currentAccountAndDebitStatusScore());
@@ -52,7 +53,7 @@ public class CustomerCreditRatingServiceImpl implements CustomerCreditRatingServ
     @Override
     public CustomerCreditRating getCustomerCreditRatingByCustomer(Customer customer) {
         return customerCreditRatingRepository.getCustomerCreditRatingByCustomer(customer).orElseThrow(() -> {
-            log.warn("getCustomerCreditRatingByCustomer - Customer Credit Rating Not Found");
+            log.warn("Customer : {} - Customer Credit Rating Not Found", customer);
             return new NotFoundException("Customer Credit Rating Not Found");
         });
     }
@@ -62,7 +63,7 @@ public class CustomerCreditRatingServiceImpl implements CustomerCreditRatingServ
         Customer customer = customerService.getCustomerByIdentityNumber(identityNumber);
         CustomerCreditRating customerCreditRating = customerCreditRatingRepository
                 .getCustomerCreditRatingByCustomer(customer).orElseThrow(() -> {
-                    log.warn("getCustomerCreditRating - Customer Credit Rating Not Found");
+                    log.warn("Customer : {} - Customer Credit Rating Not Found", customer);
                     return new NotFoundException("Customer Credit Rating Not Found");
                 });
         return new CustomerCreditRatingResponse(customerCreditRating);

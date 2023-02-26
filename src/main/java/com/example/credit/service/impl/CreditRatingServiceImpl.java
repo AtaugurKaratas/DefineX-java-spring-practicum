@@ -19,9 +19,12 @@ public class CreditRatingServiceImpl implements CreditRatingService {
 
     @Override
     public void saveCurrentCreditRating(CreditRatingDto creditRatingDto) {
-        if (creditRatingDto.creditProductPaymentHabits() + creditRatingDto.creditUsageIntensity() +
-                creditRatingDto.currentAccountAndDebitStatus() + creditRatingDto.newCreditProductLaunches() != 100) {
-            log.warn("saveCurrentCreditRating - The Sum Of The Odds Is Not 100");
+        double totalCreditRating = creditRatingDto.creditProductPaymentHabits() +
+                creditRatingDto.creditUsageIntensity() +
+                creditRatingDto.currentAccountAndDebitStatus() +
+                creditRatingDto.newCreditProductLaunches();
+        if (totalCreditRating != 100) {
+            log.warn("Total Credit Rating: {} - The Sum Of The Odds Is Not 100", totalCreditRating);
             throw new IncorrectCreditRates("The Sum Of The Odds Is Not 100");
         }
         CreditRating creditRating = new CreditRating();

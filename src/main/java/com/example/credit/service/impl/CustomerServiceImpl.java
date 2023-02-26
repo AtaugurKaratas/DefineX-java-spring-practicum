@@ -53,13 +53,14 @@ public class CustomerServiceImpl implements CustomerService {
                 .birthDate(customerRequest.birthDate())
                 .auth(this.getAuth(customerRequest.authId())).build();
         customerRepository.save(customer);
+        log.info("Auth Id: {} - Added Customer", customerRequest.authId());
         return customer;
     }
 
     @Override
     public Customer getCustomer(String customerId) {
         return customerRepository.findById(customerId).orElseThrow(() -> {
-            log.warn("getCustomer - Customer Not Found");
+            log.warn("Customer Id: {} - Customer Not Found", customerId);
             return new NotFoundException("Customer Not Found");
         });
     }
@@ -67,7 +68,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerResponse getCustomerByAuthId(String id) {
         Customer customer = customerRepository.getCustomerByAuthId(id).orElseThrow(() -> {
-            log.warn("getCustomerByAuthId - Customer Not Found");
+            log.warn("Auth Id: {} - Customer Not Found", id);
             return new NotFoundException("Customer Not Found");
         });
         customer.setImagePath("/images/" + customer.getImagePath());
@@ -81,7 +82,7 @@ public class CustomerServiceImpl implements CustomerService {
             image = stringToImage.imageProcess(customerUpdateRequest.imagePath(), ImageType.PROFILE);
         }
         Customer customer = customerRepository.findById(customerUpdateRequest.customerId()).orElseThrow(() -> {
-            log.warn("updateCustomer - Customer Not Found");
+            log.warn("Customer Id: {} - Customer Not Found", customerUpdateRequest.customerId());
             return new NotFoundException("Customer Not Found");
         });
         customer.setName(customerUpdateRequest.customerName());
@@ -96,7 +97,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer getCustomerByAuth(Auth auth) {
         return customerRepository.getCustomerByAuth(auth).orElseThrow(() -> {
-            log.warn("getCustomerByAuth - Customer Not Found");
+            log.warn("Auth Id: {} - Customer Not Found", auth.getId());
             return new NotFoundException("Customer Not Found");
         });
     }
@@ -105,7 +106,7 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer getCustomerByIdentityNumber(String identityNumber) {
         Auth auth = authService.findByIdentityNumber(identityNumber);
         return customerRepository.getCustomerByAuth(auth).orElseThrow(() -> {
-            log.warn("getCustomerByIdentityNumber - Customer Not Found");
+            log.warn("Auth Id: {} - Customer Not Found", auth.getId());
             return new NotFoundException("Customer Not Found");
         });
     }

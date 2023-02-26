@@ -41,7 +41,7 @@ public class GuaranteeCustomerServiceImpl implements GuaranteeCustomerService {
     public void updateGuarantee(UpdateGuaranteeRequest updateGuaranteeRequest) {
         GuaranteeCustomer guaranteeCustomer =
                 guaranteeCustomerRepository.findById(updateGuaranteeRequest.guaranteeId()).orElseThrow(() -> {
-                    log.warn("updateGuarantee - Guarantee Customer Not Found");
+                    log.warn("Guarantee Id: {} - Guarantee Customer Not Found", updateGuaranteeRequest.guaranteeId());
                     return new NotFoundException("Guarantee Customer Not Found");
                 });
         if (!guaranteeCustomer.isGuaranteeCheck()) {
@@ -70,7 +70,7 @@ public class GuaranteeCustomerServiceImpl implements GuaranteeCustomerService {
     @Override
     public GuaranteeResponse getGuarantee(String customerGuaranteeId) {
         GuaranteeCustomer guaranteeCustomer = guaranteeCustomerRepository.findById(customerGuaranteeId).orElseThrow(() -> {
-            log.warn("getGuarantee - Guarantee Customer Not Found");
+            log.warn("Customer Guarantee Id: {} - Guarantee Customer Not Found", customerGuaranteeId);
             return new NotFoundException("Guarantee Customer Not Found");
         });
         Credit credit = guaranteeCustomer.getCredit();

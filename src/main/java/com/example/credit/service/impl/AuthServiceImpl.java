@@ -42,6 +42,7 @@ public class AuthServiceImpl implements AuthService {
                 (authRequest.identityNumber(), authRequest.password()));
         if (authentication.isAuthenticated()) {
             Auth auth = findByIdentityNumber(authRequest.identityNumber());
+            log.info("Identity Number: {} - Login", authRequest.identityNumber());
             return new AuthTokenResponse(auth.getId(),
                     jwtService.generateToken(authRequest.identityNumber()), auth.getRoles());
         }
@@ -59,7 +60,7 @@ public class AuthServiceImpl implements AuthService {
                 .roles(RoleType.ROLE_CUSTOMER.toString()).build();
         authRepository.save(auth);
         auth = authRepository.findByIdentityNumber(authRegisterRequest.identityNumber()).orElseThrow(() -> {
-            log.warn("addUserCustomer - User Not Found");
+            log.warn("Identity Number: {} - User Not Found", authRegisterRequest.identityNumber());
             return new NotFoundException("User Not Found");
         });
         emailSenderService.sendActivationMail(auth);
@@ -69,7 +70,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String getUserId(String identityNumber) {
         Auth auth = authRepository.findByIdentityNumber(identityNumber).orElseThrow(() -> {
-            log.warn("getUserId - User Not Found");
+            log.warn("Identity Number: {} - User Not Found", identityNumber);
             return new NotFoundException("User Not Found");
         });
         return auth.getId();
@@ -78,7 +79,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public Auth getAuth(String id) {
         return authRepository.findById(id).orElseThrow(() -> {
-            log.warn("getAuth - User Not Found");
+            log.warn("Auth Id: {} - User Not Found", id);
             return new NotFoundException("User Not Found");
         });
     }
@@ -96,8 +97,9 @@ public class AuthServiceImpl implements AuthService {
                 .build();
         authRepository.save(auth);
         emailSenderService.sendRandomPassword(password, auth);
+        log.info("Identity Number: {} - Added Employee", authEmployeeRegister.identityNumber());
         return authRepository.findByIdentityNumber(authEmployeeRegister.identityNumber()).orElseThrow(() -> {
-            log.warn("addUserEmployee - User Not Found");
+            log.warn("Identity Number: {} - User Not Found", authEmployeeRegister.identityNumber());
             return new NotFoundException("User Not Found");
         });
     }
@@ -115,8 +117,9 @@ public class AuthServiceImpl implements AuthService {
                 .build();
         authRepository.save(auth);
         emailSenderService.sendRandomPassword(password, auth);
+        log.info("Identity Number: {} - Added Admin", authAdminRegister.identityNumber());
         return authRepository.findByIdentityNumber(authAdminRegister.identityNumber()).orElseThrow(() -> {
-            log.warn("addUserAdmin - User Not Found");
+            log.warn("Identity Number: {} - User Not Found", authAdminRegister.identityNumber());
             return new NotFoundException("User Not Found");
         });
     }
@@ -125,7 +128,7 @@ public class AuthServiceImpl implements AuthService {
     public boolean changePassword(ChangePasswordRequest changePassword) {
         boolean check;
         Auth auth = authRepository.findById(changePassword.authId()).orElseThrow(() -> {
-            log.warn("changePassword - User Not Found");
+            log.warn("Auth Id: {} - User Not Found", changePassword.authId());
             return new NotFoundException("User Not Found");
         });
         check = checkpw(changePassword.password(), auth.getPassword());
@@ -149,7 +152,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void forgottenPassword(ForgottenPasswordRequest forgottenPasswordRequest) {
         Auth auth = authRepository.findByEmail(forgottenPasswordRequest.email()).orElseThrow(() -> {
-            log.warn("forgottenPassword - User Not Found");
+            log.warn("Email address: {} - User Not Found", forgottenPasswordRequest.email());
             return new NotFoundException("User Not Found");
         });
         emailSenderService.forgottenPassword(auth);
@@ -168,7 +171,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public Auth findByIdentityNumber(String identityNumber) {
         return authRepository.findByIdentityNumber(identityNumber).orElseThrow(() -> {
-            log.warn("findByIdentityNumber - User Not Found");
+            log.warn("Identity Number: {} - User Not Found", identityNumber);
             return new NotFoundException("User Not Found");
         });
     }

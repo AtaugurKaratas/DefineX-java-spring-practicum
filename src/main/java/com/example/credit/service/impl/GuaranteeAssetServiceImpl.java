@@ -34,7 +34,7 @@ public class GuaranteeAssetServiceImpl implements GuaranteeAssetService {
     @Override
     public GuaranteeResponse getGuarantee(String guaranteeId) {
         GuaranteeAsset guaranteeAsset = guaranteeAssetRepository.findById(guaranteeId).orElseThrow(() -> {
-            log.warn("getGuarantee - Guarantee Asset Not Found");
+            log.warn("Guarantee Id: {} - Guarantee Asset Not Found", guaranteeId);
             return new NotFoundException("Guarantee Asset Not Found");
         });
         Credit credit = guaranteeAsset.getCredit();

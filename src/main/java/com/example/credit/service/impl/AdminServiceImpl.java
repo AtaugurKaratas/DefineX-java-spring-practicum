@@ -59,7 +59,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public void updateAdminInfo(AdminInfoUpdateRequest adminInfoUpdateRequest) {
         Admin admin = adminRepository.findById(adminInfoUpdateRequest.adminId()).orElseThrow(() -> {
-            log.warn("updateAdminInfo - Admin Not Found");
+            log.warn("Admin Id: {} - Admin Not Found", adminInfoUpdateRequest.adminId());
             return new NotFoundException("Admin Not Found");
         });
         admin.setName(adminInfoUpdateRequest.adminName());
@@ -77,7 +77,7 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public AdminResponse getAdminByAuthId(String authId) {
         Admin admin = adminRepository.getAdminByAuthId(authId).orElseThrow(() -> {
-            log.warn("getAdminByAuthId - Admin Not Found");
+            log.warn("Auth Id: {} - Admin Not Found", authId);
             return new NotFoundException("Admin Not Found");
         });
         admin.setImagePath(admin.getImagePath());

@@ -42,8 +42,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public void updateEmployee(EmployeeUpdateRequest employeeUpdateRequest) {
+        log.info(employeeUpdateRequest.toString());
         Employee employee = employeeRepository.findById(employeeUpdateRequest.employeeId()).orElseThrow(() -> {
-            log.warn("updateEmployee - Employee Not Found");
+            log.warn("Employee Id: {} - Employee Not Found", employeeUpdateRequest.employeeId());
             return new NotFoundException("Employee Not Found");
         });
         employee.setName(employeeUpdateRequest.employeeName());
@@ -60,7 +61,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeResponse getEmployeeByAuthId(String authId) {
         Employee employee = employeeRepository.getEmployeeByAuthId(authId).orElseThrow(() -> {
-            log.warn("getEmployeeByAuthId - Employee Not Found");
+            log.warn("Auth Id: {} - Employee Not Found", authId);
             return new NotFoundException("Employee Not Found");
         });
         employee.setImagePath("/images/" + employee.getImagePath());
