@@ -1,0 +1,61 @@
+application-version: '1.0'
+application-description: DefineX Credit Application
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+
+spring:
+  sql:
+    init:
+      mode: always
+      continue-on-error: true
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: 'true'
+        show_sql: 'true'
+        globally_quoted_identifiers: true
+      jakarta:
+        persistence:
+          sharedCache:
+            mode: NONE
+    hibernate:
+      ddl-auto: update
+    open-in-view: 'false'
+    defer-datasource-initialization: true
+  main:
+    allow-bean-definition-overriding: 'true'
+  datasource:
+    password: my-secret-password-2022
+    username: ataugurkaratas
+    url: jdbc:postgresql://db:5432/postgres
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: username
+    password: password
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+mail-address: mail_address
+
+twilio:
+  account_sid: account_sid
+  auth_token: auth_token
+  trial_number: trial_number
+
+messaging-service-sid: messaging_service_sid
+
+upload-profile-images-path: profile-images-storage
+upload-asset-images-path: asset-images-storage
+
+jwt:
+  secret:
+    key: 28472B4B6250655368566D597133743677397A244326452948404D635166546A576E5A7234753778214125442A472D4A614E645267556B58703273357638792F
+  expiration:
+    time: '360000000'
