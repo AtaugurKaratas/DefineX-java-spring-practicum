@@ -16,11 +16,10 @@
 * Lombok
 * Apache Tika
 * Spring Security Role Based Authorization
-  Maven is java based build tool to generate executable
 
 <hr/>
 
-packages(jar, ear, war) for java based projects.
+Maven is java based build tool to generate executable packages(jar, ear, war) for java based projects.
 
 ```bash
 mvn clean package
