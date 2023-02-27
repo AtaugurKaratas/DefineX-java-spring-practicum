@@ -16,6 +16,48 @@
 * Lombok
 * Apache Tika
 * Spring Security Role Based Authorization
+  Maven is java based build tool to generate executable
+
+<hr/>
+
+packages(jar, ear, war) for java based projects.
+
+```bash
+mvn clean package
+```
+
+## Create Docker Image
+Docker is a continerization tool.Using docker we can deploy our applications as
+
+containers using docker images. Containers contains application code and also the softwares,
+
+config files whatever is required for our application to run.
+
+Create docker image using Dockerfile
+
+
+```docker
+docker build -t credit/backend:latest .
+```
+
+## Deploy Application Using Docker Compose
+
+```docker-compose 
+docker-compose up -d 
+```
+<hr/>
+
+<b>Programa kayıt olabilmek ve sms service'ini kullanabilmek için application.yaml dosyasındaki email ve sms bilgilerini
+güncellemek gereklidir. Kayıt olmadan programı kullanabilmek için data.sql dosyasına bulunan kullanıcılarla giriş 
+yapabilirsiniz.<b/>  
+
+Admin: (Identity Number: 11111111111 - password: p4ssword)
+
+Employee: (Identity Number: 22222222222 - password: p4ssword)
+
+Customer: (Identity Number: 33333333333 - password: p4ssword)
+
+<hr/>
 
 ![Authentication_Controller](projectImages/auth-controller.png)
 
@@ -97,8 +139,7 @@ değeri yazdırılacaktır.
 Teminat isteği yapılan müşteri gelen liste aracılığı ile istek yapan kişinin resmini, ad ve soyadını, teminat olarak
 gösterilen tutarı ve onay durumunu görüntüleyebilir. Detay butonuna tıklayarak teminatın detay sayfasına gider ve 
 onaylama ve reddetme işlemlerinden birisine yapabilir. Eğer bir kredi de teminat olarak başka bir müşteri gösterildiyse 
-o müşteri onaylamadan çalışanlar bu kredi bilgilerini göremezler. Direkt ret edilmesi durumunda ise kredi başvurusu
-otomatik olarak ret edilir.
+o müşteri onaylamadan çalışanlar bu kredi bilgilerini göremezler.
 
 ![Credit_Guarantee](projectImages/CreditGuarantee.png)
 

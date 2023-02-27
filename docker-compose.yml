@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  db:
+    container_name: credit-database
+    image: postgres
+    environment:
+      POSTGRES_USER: ataugurkaratas
+      POSTGRES_PASSWORD: my-secret-password-2022
+      POSTGRES_DB: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - db:/data:db
+  credit-backend-app:
+    image: credit/backend
+    container_name: backend
+    ports:
+      - 8080:8080
+    depends_on:
+      - db
+  credit-frontend-app:
+    image: credit/frontend
+    container_name: frontend
+    ports:
+      - 3000:3000
+    links:
+      - credit-backend-app
+volumes:
+  db:
